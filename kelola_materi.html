@@ -1,0 +1,95 @@
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Materi - E-Learning</title>
+    <link rel="stylesheet" href=".css">
+    <script>
+        let materials = [];
+        let reports = JSON.parse(localStorage.getItem('reports')) || [];
+
+        function updateMaterialTable() {
+            const materialTableBody = document.getElementById("material-table-body");
+            materialTableBody.innerHTML = ""; // Clear existing rows
+            materials.forEach((material, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td><input type="text" value="${material.title}" id="title-${index}" /></td>
+                    <td>
+                        <button onclick="saveMaterial(${index})">Simpan</button>
+                        <button onclick="deleteMaterial(${index})">Hapus</button>
+                    </td>
+                `;
+                materialTableBody.appendChild(row);
+            });
+        }
+
+        function addMaterial(event) {
+            event.preventDefault();
+            const title = document.getElementById("title").value;
+
+            materials.push({ title });
+            updateMaterialTable();
+            addReport(`Materi baru ditambahkan: ${title}`);
+            document.getElementById("material-form").reset();
+            saveReports();
+        }
+
+        function saveMaterial(index) {
+            const title = document.getElementById(`title-${index}`).value;
+
+            materials[index] = { title };
+            updateMaterialTable();
+            addReport(`Materi diubah: ${title}`);
+            saveReports();
+        }
+
+        function deleteMaterial(index) {
+            const title = materials[index].title;
+            materials.splice(index, 1);
+            updateMaterialTable();
+            addReport(`Materi dihapus: ${title}`);
+            saveReports();
+        }
+
+        function addReport(activity) {
+            const date = new Date().toISOString().split('T')[0]; // Get current date
+            reports.push({ date, activity });
+            saveReports();
+        }
+
+        function saveReports() {
+            localStorage.setItem('reports', JSON.stringify(reports));
+        }
+
+        window.onload = function() {
+            updateMaterialTable();
+        };
+    </script>
+</head>
+<body>
+    <div class="admin-panel">
+        <h1>Kelola Materi</h1>
+        <form id="material-form" onsubmit="addMaterial(event)">
+            <label for="title">Judul Materi:</label>
+            <input type="text" id="title" name="title" required>
+
+            <button type="submit">Tambah Materi</button>
+        </form>
+        <h3>Daftar Materi</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Judul Materi</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="material-table-body">
+                <!-- Data materi akan ditambahkan di sini -->
+            </tbody>
+        </table>
+        <button onclick="window.location.href='kelola_pengguna.html'">Kelola Pengguna</button>
+        <button onclick="window.location.href='laporan.html'">Lihat Laporan</button>
+    </div>
+</body>
+</html>

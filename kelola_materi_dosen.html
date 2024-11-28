@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Materi - Dosen</title>
+    <link rel="stylesheet" href=".css">
+</head>
+<body>
+    <div class="dosen-panel">
+        <h1>Kelola Materi</h1>
+        <form id="material-form">
+            <label for="material-title">Judul Materi:</label>
+            <input type="text" id="material-title" required>
+
+            <label for="material-file">Unggah File Materi:</label>
+            <input type="file" id="material-file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt" required>
+
+            <button type="submit">Tambahkan Materi</button>
+        </form>
+
+        <h3>Daftar Materi yang Dikirim</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Judul Materi</th>
+                    <th>File</th>
+                </tr>
+            </thead>
+            <tbody id="material-table-body">
+                <!-- Data materi akan ditambahkan di sini -->
+            </tbody>
+        </table>
+        <button onclick="window.location.href='dosen.html'">Kembali ke Panel Dosen</button>
+    </div>
+
+    <script>
+        const materialForm = document.getElementById('material-form');
+        const materialTableBody = document.getElementById('material-table-body');
+
+        // Load materials from localStorage
+        function loadMaterials() {
+            const materials = JSON.parse(localStorage.getItem('materials')) || [];
+            materials.forEach(material => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${material.title}</td>
+                    <td><a href="${material.fileURL}" download="${material.fileName}">Download</a></td>
+                `;
+                materialTableBody.appendChild(row);
+            });
+        }
+
+        materialForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Mencegah pengiriman form
+
+            const materialTitle = document.getElementById('material-title').value;
+            const materialFile = document.getElementById('material-file').files[0];
+            const fileURL = URL.createObjectURL(materialFile);
+
+            // Simpan materi ke localStorage
+            const materials = JSON.parse(localStorage.getItem('materials')) || [];
+            materials.push({ title: materialTitle, fileURL: fileURL, fileName: materialFile.name });
+            localStorage.setItem('materials', JSON.stringify(materials));
+
+            // Menambahkan baris baru ke tabel
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${materialTitle}</td>
+                <td><a href="${fileURL}" download="${materialFile.name}">Download</a></td>
+            `;
+            materialTableBody.appendChild(row);
+
+            // Reset form
+            materialForm.reset();
+        });
+
+        // Load materials on page load
+        loadMaterials();
+    </script>
+</body>
+</html>

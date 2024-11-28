@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Absen - Dosen</title>
+    <link rel="stylesheet" href=".css">
+</head>
+<body>
+    <div class="dosen-panel">
+        <h1>Kelola Absen</h1>
+
+        <h2>Daftar Mahasiswa</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Status Absen</th>
+                </tr>
+            </thead>
+            <tbody id="student-list-body">
+                <!-- Data mahasiswa akan ditambahkan di sini -->
+            </tbody>
+        </table>
+
+        <button onclick="saveAttendance()">Simpan Status Absen</button>
+        <button onclick="window.location.href='data_mahasiswa.html'">Kembali ke Data Mahasiswa</button>
+    </div>
+
+    <script>
+        const studentListBody = document.getElementById('student-list-body');
+
+        // Load students from localStorage
+        function loadStudents() {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.username}</td>
+                    <td>
+                        <select id="attendance-${student.id}">
+                            <option value="Hadir">Hadir</option>
+                            <option value="Sakit">Sakit</option>
+                            <option value="Alpa">Alpa</option>
+                        </select>
+                    </td>
+                `;
+                studentListBody.appendChild(row);
+            });
+        }
+
+        // Save attendance status
+        function saveAttendance() {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            students.forEach(student => {
+                const attendanceSelect = document.getElementById(`attendance-${student.id}`);
+                student.attendance = attendanceSelect.value;
+            });
+            localStorage.setItem('students', JSON.stringify(students));
+            alert('Status absen berhasil disimpan!');
+        }
+
+        // Load students on page load
+        loadStudents();
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas - Mahasiswa</title>
+    <link rel="stylesheet" href=".css">
+</head>
+<body>
+    <div class="mahasiswa-panel">
+        <h1>Tugas</h1>
+
+        <!-- Panel Daftar Tugas -->
+        <h2>Daftar Tugas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Judul Tugas</th>
+                    <th>Deskripsi</th>
+                    <th>Batas Waktu</th>
+                </tr>
+            </thead>
+            <tbody id="assignment-table-body">
+                <!-- Data tugas akan ditambahkan di sini -->
+            </tbody>
+        </table>
+
+        <!-- Panel Unggah Tugas -->
+        <div class="upload-panel">
+            <h2>Unggah Tugas</h2>
+            <form id="upload-form">
+                <label for="upload-task-title">Judul Tugas:</label>
+                <input type="text" id="upload-task-title" required>
+
+                <label for="upload-task-file">Unggah File Tugas:</label>
+                <input type="file" id="upload-task-file" required>
+
+                <button type="submit">Kirim Tugas</button>
+            </form>
+        </div>
+
+        <button onclick="window.location.href='mahasiswa.html'">Kembali ke Panel Mahasiswa</button>
+    </div>
+
+    <script>
+        const uploadForm = document.getElementById('upload-form');
+        const assignmentTableBody = document.getElementById('assignment-table-body');
+
+        // Load assignments from localStorage
+        function loadAssignments() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach(task => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${task.title}</td>
+                    <td>${task.description}</td>
+                    <td>${task.deadline}</td>
+                `;
+                assignmentTableBody.appendChild(row);
+            });
+        }
+
+        uploadForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Mencegah pengiriman form
+
+            const uploadTaskTitle = document.getElementById('upload-task-title').value;
+            const uploadTaskFile = document.getElementById('upload-task-file').files[0];
+
+            // Simpan tugas ke localStorage
+            const assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+            const fileURL = URL.createObjectURL(uploadTaskFile);
+            assignments.push({ title: uploadTaskTitle, file: fileURL, submitted: true });
+            localStorage.setItem('assignments', JSON.stringify(assignments));
+
+            // Reset form
+            uploadForm.reset();
+            alert('Tugas berhasil diunggah!');
+        });
+
+        // Load assignments on page load
+        loadAssignments();
+    </script>
+</body>
+</html>

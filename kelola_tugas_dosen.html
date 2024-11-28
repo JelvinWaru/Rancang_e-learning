@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Tugas - Dosen</title>
+    <link rel="stylesheet" href=".css">
+</head>
+<body>
+    <div class="dosen-panel">
+        <h1>Kelola Tugas</h1>
+
+        <!-- Tombol untuk Akses Panel Tugas yang Dikirim Mahasiswa -->
+        <button onclick="window.location.href='tugas_dikirim.html'">Lihat Tugas yang Dikirim Mahasiswa</button>
+
+        <!-- Form untuk Menambahkan Tugas Baru -->
+        <h2>Tambah Tugas Baru</h2>
+        <form id="add-task-form">
+            <label for="task-title">Judul Tugas:</label>
+            <input type="text" id="task-title" required>
+
+            <label for="task-description">Deskripsi:</label>
+            <textarea id="task-description" required></textarea>
+
+            <label for="task-deadline">Batas Waktu:</label>
+            <input type="date" id="task-deadline" required>
+
+            <button type="submit">Tambah Tugas</button>
+        </form>
+
+        <h2>Daftar Tugas yang Diberikan</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Judul Tugas</th>
+                    <th>Deskripsi</th>
+                    <th>Batas Waktu</th>
+                </tr>
+            </thead>
+            <tbody id="task-list-body">
+                <!-- Data tugas yang diberikan akan ditambahkan di sini -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const addTaskForm = document.getElementById('add-task-form');
+        const taskListBody = document.getElementById('task-list-body');
+
+        // Load tasks from localStorage
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach(task => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${task.title}</td>
+                    <td>${task.description}</td>
+                    <td>${task.deadline}</td>
+                `;
+                taskListBody.appendChild(row);
+            });
+        }
+
+        // Fungsi untuk menambahkan tugas baru
+        addTaskForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Mencegah pengiriman form
+
+            const taskTitle = document.getElementById('task-title').value;
+            const taskDescription = document.getElementById('task-description').value;
+            const taskDeadline = document.getElementById('task-deadline').value;
+
+            // Simpan tugas baru ke localStorage
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.push({ title: taskTitle, description: taskDescription, deadline: taskDeadline });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+
+            // Reset form
+            addTaskForm.reset();
+            alert('Tugas berhasil ditambahkan!');
+
+            // Tambahkan tugas baru ke daftar yang ditampilkan
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${taskTitle}</td>
+                <td>${taskDescription}</td>
+                <td>${taskDeadline}</td>
+            `;
+            taskListBody.appendChild(row);
+        });
+
+        // Load tasks on page load
+        loadTasks();
+    </script>
+</body>
+</html>

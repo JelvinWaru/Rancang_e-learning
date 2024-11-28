@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi - Mahasiswa</title>
+    <link rel="stylesheet" href=".css">
+</head>
+<body>
+    <div class="mahasiswa-panel">
+        <h1>Materi</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Judul Materi</th>
+                    <th>File</th>
+                </tr>
+            </thead>
+            <tbody id="material-table-body">
+                <!-- Data materi akan ditambahkan di sini -->
+            </tbody>
+        </table>
+        <button onclick="window.location.href='mahasiswa.html'">Kembali ke Panel Mahasiswa</button>
+    </div>
+
+    <script>
+        const materialTableBody = document.getElementById('material-table-body');
+
+        // Load materials from localStorage
+        function loadMaterials() {
+            const materials = JSON.parse(localStorage.getItem('materials')) || [];
+            materials.forEach(material => {
+                const row = document.createElement('tr');
+                row.innerHTML =
+                `
+                    <td>${material.title}</td>
+                    <td><a href="${material.file}" download>Unduh</a></td>
+                `;
+                materialTableBody.appendChild(row);
+            });
+        }
+
+        // Load materials on page load
+        loadMaterials();
+    </script>
+</body>
+</html>

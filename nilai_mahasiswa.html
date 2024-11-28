@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nilai - Mahasiswa</title>
+    <link rel="stylesheet" href=".css">
+</head>
+<body>
+    <div class="mahasiswa-panel">
+        <h1>Nilai</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Judul Tugas</th>
+                    <th>Nilai</th>
+                </tr>
+            </thead>
+            <tbody id="grade-table-body">
+                <!-- Data nilai akan ditambahkan di sini -->
+            </tbody>
+        </table>
+        <button onclick="window.location.href='mahasiswa.html'">Kembali ke Panel Mahasiswa</button>
+    </div>
+
+    <script>
+        const gradeTableBody = document.getElementById('grade-table-body');
+
+        // Load grades from localStorage
+        function loadGrades() {
+            const grades = JSON.parse(localStorage.getItem('grades')) || [];
+            grades.forEach(grade => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${ grade.assignmentTitle}</td>
+                    <td>${grade.score}</td>
+                `;
+                gradeTableBody.appendChild(row);
+            });
+        }
+
+        // Load grades on page load
+        loadGrades();
+    </script>
+</body>
+</html>

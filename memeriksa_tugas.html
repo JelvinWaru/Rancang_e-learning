@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memeriksa Tugas - Dosen</title>
+    <link rel="stylesheet" href=".css">
+</head>
+<body>
+    <div class="dosen-panel">
+        <h1>Memeriksa Tugas</h1>
+        <h3>Daftar Tugas yang Dikirim Mahasiswa</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Judul Tugas</th>
+                    <th>File</th>
+                    <th>Nilai</th>
+                </tr>
+            </thead>
+            <tbody id="check-task-table-body">
+                <!-- Data tugas akan ditambahkan di sini -->
+            </tbody>
+        </table>
+        <button onclick="window.location.href='dosen.html'">Kembali ke Panel Dosen</button>
+    </div>
+
+    <script>
+        const checkTaskTableBody = document.getElementById('check-task-table-body');
+
+        // Load submitted tasks from localStorage
+        function loadSubmittedTasks() {
+            const submittedTasks = JSON.parse(localStorage.getItem('submittedTasks')) || [];
+            submittedTasks.forEach(task => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${task.title}</td>
+                    <td><a href="${task.fileURL}" download="${task.fileName}">Download</a></td>
+                    <td>
+                        <input type="number" min="0" max="100" placeholder="Nilai" id="grade-${task.title}">
+                        <button onclick="submitGrade('${task.title}')">Simpan Nilai</button>
+                    </td>
+                `;
+                checkTaskTableBody.appendChild(row);
+            });
+        }
+
+        function submitGrade(taskTitle) {
+            const gradeInput = document.getElementById(`grade-${taskTitle}`);
+            const grade = gradeInput.value;
+
+            if (grade) {
+                // Simulasi penyimpanan nilai (di sini Anda bisa menambahkan logika untuk menyimpan nilai di server)
+                console.log(`Nilai untuk ${taskTitle}: ${grade}`);
+                gradeInput.value = ''; // Reset input nilai
+            } else {
+                alert('Silakan masukkan nilai yang valid.');
+            }
+        }
+
+        // Load submitted tasks on page load
+        loadSubmittedTasks();
+    </script>
+</body>
+</html>

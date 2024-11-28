@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - E-Learning</title>
+    <link rel="stylesheet" href=".css">
+    <link rel="stylesheet" href="latar_belakang.css">
+    <script>
+        function redirectToPanel(event) {
+            event.preventDefault(); // Mencegah pengiriman form default
+            
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Logika untuk menentukan panel yang akan diakses
+            if (username.startsWith("admin")) {
+                window.location.href = "admin.html"; // Arahkan ke panel admin
+            } else if (username.startsWith("dosen")) {
+                window.location.href = "dosen.html"; // Arahkan ke panel dosen
+            } else if (username.startsWith("mahasiswa")) {
+                window.location.href = "mahasiswa.html"; // Arahkan ke panel mahasiswa
+            } else {
+                alert("Username tidak valid!"); // Pesan kesalahan
+            }
+        }
+    </script>
+
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const loginMessage = document.getElementById('login-message');
+
+        // Data pengguna yang diizinkan
+        const users = [
+            { username: 'admin', password: 'admin123', role: 'admin' },
+            { username: 'dosen', password: 'dosen123', role: 'dosen' }
+        ];
+
+        // Fungsi untuk login
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Mencegah pengiriman form
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Cek kredensial pengguna
+            const user = users.find(user => user.username === username && user.password === password);
+            if (user) {
+                // Simpan informasi pengguna di localStorage
+                localStorage.setItem('loggedInUser ', JSON.stringify(user));
+                // Arahkan ke halaman data mahasiswa
+                window.location.href = 'data_mahasiswa.html';
+            } else {
+                loginMessage.textContent = 'Username atau password salah.';
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login E-Learning</h1>
+        <form onsubmit="redirectToPanel(event)">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="extra-links">
+            <button onclick="window.location.href='mendaftar.html'">Mendaftar</button>
+            <button class="forgot-password" onclick="window.location.href='lupa-password.html'">Lupa Password</button>
+        </div>
+    </div>
+
+    <button class="help-button" onclick="window.location.href='bantuan.html'">?</button>
+    <button class="about-button" onclick="window.location.href='tentang.html'">👤</button>
+</body>
+</html>

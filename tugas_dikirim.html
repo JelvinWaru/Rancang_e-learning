@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas yang Dikirim - Dosen</title>
+    <link rel="stylesheet" href=".css">
+</head>
+<body>
+    <div class="dosen-panel">
+        <h1>Tugas yang Dikirim oleh Mahasiswa</h1>
+
+        <!-- Tombol untuk Kembali ke Panel Kelola Tugas -->
+        <button onclick="window.location.href='kelola_tugas_dosen.html'"> Kembali ke Kelola Tugas</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Judul Tugas</th>
+                    <th>File</th>
+                    <th>Nilai</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="submitted-tasks-body">
+                <!-- Data tugas yang dikirim akan ditambahkan di sini -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const submittedTasksBody = document.getElementById('submitted-tasks-body');
+
+        // Load submitted assignments from localStorage
+        function loadSubmittedAssignments() {
+            const assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+            assignments.forEach((assignment, index) => {
+                if (assignment.submitted) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${assignment.title}</td>
+                        <td><a href="${assignment.file}" target="_blank">Lihat File</a></td>
+                        <td>
+                            <input type="number" id="grade-${index}" placeholder="Nilai" min="0" max="100">
+                        </td>
+                        <td>
+                            <button onclick="submitGrade(${index})">Berikan Nilai</button>
+                        </td>
+                    `;
+                    submittedTasksBody.appendChild(row);
+                }
+            });
+        }
+
+        function submitGrade(index) {
+            const gradeInput = document.getElementById(`grade-${index}`);
+            const grade = gradeInput.value;
+
+            if (grade !== "") {
+                alert(`Nilai ${grade} telah diberikan untuk tugas ${index + 1}`);
+                // Simpan nilai ke localStorage atau database sesuai kebutuhan
+                const assignments = JSON.parse(localStorage.getItem('assignments'));
+                assignments[index].grade = grade;
+                localStorage.setItem('assignments', JSON.stringify(assignments));
+            } else {
+                alert("Silakan masukkan nilai sebelum mengirim.");
+            }
+        }
+
+        // Load submitted assignments on page load
+        loadSubmittedAssignments();
+    </script>
+</body>
+</html>

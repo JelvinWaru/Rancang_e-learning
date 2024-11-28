@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontrak - Mahasiswa</title>
+    <link rel="stylesheet" href=".css">
+</head>
+<body>
+    <div class="mahasiswa-panel">
+        <h1>Kontrak</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Judul</th>
+                    <th>Deskripsi</th>
+                </tr>
+            </thead>
+            <tbody id="contract-table-body">
+                <!-- Data kontrak akan ditambahkan di sini -->
+            </tbody>
+        </table>
+        <button onclick="window.location.href='mahasiswa.html'">Kembali ke Panel Mahasiswa</button>
+    </div>
+
+    <script>
+        const contractTableBody = document.getElementById('contract-table-body');
+
+        // Load contracts from localStorage
+        function loadContracts() {
+            const contracts = JSON.parse(localStorage.getItem('contracts')) || [];
+            contracts.forEach(contract => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${contract.title}</td>
+                    <td>${contract.description}</td>
+                `;
+                contractTableBody.appendChild(row);
+            });
+        }
+
+        // Load contracts on page load
+        loadContracts();
+    </script>
+</body>
+</html>

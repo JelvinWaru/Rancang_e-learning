@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Pengguna</title>
+    <link rel="stylesheet" href=".css">
+</head>
+<body>
+    <div class="admin-panel">
+        <h1>Kelola Pengguna</h1>
+        
+        <h2>Pendaftaran Mahasiswa</h2>
+        <form id="registration-mahasiswa-form">
+            <label for="name-mahasiswa">Nama:</label>
+            <input type="text" id="name-mahasiswa" required>
+
+            <label for="nim">NIM:</label>
+            <input type="text" id="nim-mahasiswa" required>
+
+            <label for="semester">Semester:</label>
+            <input type="number" id="semester-mahasiswa" required min="1">
+
+            <label for="angkatan">Angkatan:</label>
+            <input type="text" id="angkatan-mahasiswa" required>
+
+            <label for="email-mahasiswa">Email:</label>
+            <input type="email" id="email-mahasiswa" required>
+
+            <label for="password-mahasiswa">Password:</label>
+            <input type="password" id="password-mahasiswa" required>
+
+            <button type="submit">Daftar Mahasiswa</button>
+        </form>
+
+        <h2>Pendaftaran Dosen</h2>
+        <form id="registration-dosen-form">
+            <label for="name-dosen">Nama:</label>
+            <input type="text" id="name-dosen" required>
+
+            <label for="nip">NIP:</label>
+            <input type="text" id="nip-dosen" required>
+
+            <label for="email-dosen">Email:</label>
+            <input type="email" id="email-dosen" required>
+
+            <label for="password-dosen">Password:</label>
+            <input type="password" id="password-dosen" required>
+
+            <button type="submit">Daftar Dosen</button>
+        </form>
+
+        <button onclick="window.location.href='data_mahasiswa.html'">Lihat Data Mahasiswa</button>
+        <button onclick="window.location.href='data_dosen.html'">Lihat Data Dosen</button>
+    </div>
+
+    <script>
+        // Pendaftaran Mahasiswa
+        const registrationMahasiswaForm = document.getElementById('registration-mahasiswa-form');
+        registrationMahasiswaForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Mencegah pengiriman form
+
+            const name = document.getElementById('name-mahasiswa').value;
+            const nim = document.getElementById('nim-mahasiswa').value;
+            const semester = document.getElementById('semester-mahasiswa').value;
+            const angkatan = document.getElementById('angkatan-mahasiswa').value;
+            const email = document.getElementById('email-mahasiswa').value;
+            const password = document.getElementById('password-mahasiswa').value;
+
+            // Ambil data mahasiswa yang sudah ada
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+
+            // Cek apakah NIM sudah ada
+            const existingStudent = students.find(student => student.nim === nim);
+            if (existingStudent) {
+                alert('NIM sudah terdaftar. Silakan gunakan NIM lain.');
+                return;
+            }
+
+            // Tambahkan mahasiswa baru
+            const newStudent = {
+                id: students.length + 1,
+                name: name,
+                nim: nim,
+                semester: semester,
+                angkatan: angkatan,
+                email: email,
+                password: password
+            };
+            students.push(newStudent);
+
+            // Simpan data mahasiswa ke localStorage
+            localStorage.setItem('students', JSON.stringify(students));
+            alert('Pendaftaran mahasiswa berhasil!');
+
+            // Reset form
+            registrationMahasiswaForm.reset();
+        });
+
+        // Pendaftaran Dosen
+        const registrationDosenForm = document.getElementById('registration-dosen-form');
+        registrationDosenForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Mencegah pengiriman form
+
+            const name = document.getElementById('name-dosen').value;
+            const nip = document.getElementById('nip-dosen').value;
+            const email = document.getElementById('email-dosen'). value;
+            const password = document.getElementById('password-dosen').value;
+
+            // Ambil data dosen yang sudah ada
+            const lecturers = JSON.parse(localStorage.getItem('lecturers')) || [];
+
+            // Cek apakah NIP sudah ada
+            const existingLecturer = lecturers.find(lecturer => lecturer.nip === nip);
+            if (existingLecturer) {
+                alert('NIP sudah terdaftar. Silakan gunakan NIP lain.');
+                return;
+            }
+
+            // Tambahkan dosen baru
+            const newLecturer = {
+                id: lecturers.length + 1,
+                name: name,
+                nip: nip,
+                email: email,
+                password: password
+            };
+            lecturers.push(newLecturer);
+
+            // Simpan data dosen ke localStorage
+            localStorage.setItem('lecturers', JSON.stringify(lecturers));
+            alert('Pendaftaran dosen berhasil!');
+
+            // Reset form
+            registrationDosenForm.reset();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Mahasiswa</title>
+    <link rel="stylesheet" href=".css">
+</head>
+<body>
+    <div class="data-panel">
+        <h1>Data Mahasiswa</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>NIM</th>
+                    <th>Semester</th>
+                    <th>Angkatan</th>
+                    <th>Email</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="student-list-body">
+                <!-- Data mahasiswa akan ditambahkan di sini -->
+            </tbody>
+        </table>
+        <button onclick="window.location.href='kelola_pengguna.html'">Kembali ke Kelola Pengguna</button>
+    </div>
+
+    <script>
+        const studentListBody = document.getElementById('student-list-body');
+
+        // Load students from localStorage
+        function loadStudents() {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            studentListBody.innerHTML = ''; // Clear existing data
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td>${student.nim}</td>
+                    <td>${student.semester}</td>
+                    <td>${student.angkatan}</td>
+                    <td>${student.email}</td>
+                    <td>
+                        <button onclick="editStudent(${student.id})">Edit</button>
+                        <button onclick="deleteStudent(${student.id})">Hapus</button>
+                    </td>
+                `;
+                studentListBody.appendChild(row);
+            });
+        }
+
+        // Edit student
+        function editStudent(id) {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const student = students.find(s => s.id === id);
+            if (student) {
+                const name = prompt("Edit Nama:", student.name);
+                const nim = prompt("Edit NIM:", student.nim);
+                const semester = prompt("Edit Semester:", student.semester);
+                const angkatan = prompt("Edit Angkatan:", student.angkatan);
+                const email = prompt("Edit Email:", student.email);
+
+                if (name && nim && semester && angkatan && email) {
+                    student.name = name;
+                    student.nim = nim;
+                    student.semester = semester;
+                    student.angkatan = angkatan;
+                    student.email = email;
+
+                    localStorage.setItem('students', JSON.stringify(students));
+                    loadStudents();
+                }
+            }
+        }
+
+        // Delete student
+        function deleteStudent(id) {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const updatedStudents = students.filter(student => student.id !== id);
+            localStorage.setItem('students', JSON.stringify(updatedStudents));
+            loadStudents();
+        }
+
+        // Load students on page load
+        loadStudents();
+    </script>
+</body>
+</html>

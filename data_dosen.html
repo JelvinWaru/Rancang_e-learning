@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Dosen</title>
+    <link rel="stylesheet" href=".css">
+</head>
+<body>
+    <div class="data-panel">
+        <h1>Data Dosen</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>NIP</th>
+                    <th>Email</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="lecturer-list-body">
+                <!-- Data dosen akan ditambahkan di sini -->
+            </tbody>
+        </table>
+        <button onclick="window.location.href='kelola_pengguna.html'">K embali ke Kelola Pengguna</button>
+    </div>
+
+    <script>
+        const lecturerListBody = document.getElementById('lecturer-list-body');
+
+        // Load lecturers from localStorage
+        function loadLecturers() {
+            const lecturers = JSON.parse(localStorage.getItem('lecturers')) || [];
+            lecturerListBody.innerHTML = ''; // Clear existing data
+            lecturers.forEach(lecturer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${lecturer.id}</td>
+                    <td>${lecturer.name}</td>
+                    <td>${lecturer.nip}</td>
+                    <td>${lecturer.email}</td>
+                    <td>
+                        <button onclick="editLecturer(${lecturer.id})">Edit</button>
+                        <button onclick="deleteLecturer(${lecturer.id})">Hapus</button>
+                    </td>
+                `;
+                lecturerListBody.appendChild(row);
+            });
+        }
+
+        // Edit lecturer
+        function editLecturer(id) {
+            const lecturers = JSON.parse(localStorage.getItem('lecturers')) || [];
+            const lecturer = lecturers.find(l => l.id === id);
+            if (lecturer) {
+                const name = prompt("Edit Nama:", lecturer.name);
+                const nip = prompt("Edit NIP:", lecturer.nip);
+                const email = prompt("Edit Email:", lecturer.email);
+
+                if (name && nip && email) {
+                    lecturer.name = name;
+                    lecturer.nip = nip;
+                    lecturer.email = email;
+
+                    localStorage.setItem('lecturers', JSON.stringify(lecturers));
+                    loadLecturers();
+                }
+            }
+        }
+
+        // Delete lecturer
+        function deleteLecturer(id) {
+            const lecturers = JSON.parse(localStorage.getItem('lecturers')) || [];
+            const updatedLecturers = lecturers.filter(lecturer => lecturer.id !== id);
+            localStorage.setItem('lecturers', JSON.stringify(updatedLecturers));
+            loadLecturers();
+        }
+
+        // Load lecturers on page load
+        loadLecturers();
+    </script>
+</body>
+</html>

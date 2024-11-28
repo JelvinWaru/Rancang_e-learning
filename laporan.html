@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan - E-Learning</title>
+    <link rel="stylesheet" href=".css">
+    <script>
+        let reports = JSON.parse(localStorage.getItem('reports')) || [];
+
+        function updateReportTable() {
+            const reportTableBody = document.getElementById("report-table-body");
+            reportTableBody.innerHTML = ""; // Clear existing rows
+            reports.forEach(report => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${report.date}</td>
+                    <td>${report.activity}</td>
+                `;
+                reportTableBody.appendChild(row);
+            });
+        }
+
+        window.onload = function() {
+            updateReportTable();
+        };
+    </script>
+</head>
+<body>
+    <div class="admin-panel">
+        <h1>Laporan Aktivitas</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Aktivitas</th>
+                </tr>
+            </thead>
+            <tbody id="report-table-body">
+                <!-- Data laporan akan ditambahkan di sini -->
+            </tbody>
+        </ ```html
+        </table>
+        <button onclick="window.location.href='kelola_pengguna.html'">Kelola Pengguna</button>
+        <button onclick="window.location.href='kelola_materi.html'">Kelola Materi</button>
+    </div>
+</body>
+</html>
